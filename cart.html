@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Giỏ hàng - 25May</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+ <h2>25May – Thời trang Basic Nam Nữ</h2>
+  <h2> Every day basic, for everyone </h2>
+  <nav>
+    <a href="index.html">Trang chủ</a> |
+    <a href="products.html">Sản phẩm</a> |
+    <a href="about.html">Giới thiệu</a> |
+    <a href="contact.html">Liên hệ</a> |
+    <a href="cart.html">Giỏ hàng</a>
+  </nav>
+</header>
+<hr>
+
+ <section>
+    <h2>🛍️ Giỏ hàng của bạn</h2>
+    <table id="cartTable">
+      <thead>
+        <tr>
+          <th>Hình ảnh</th>
+          <th>Sản phẩm</th>
+          <th>Size</th>
+          <th>Số lượng</th>
+          <th>Giá</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="cartBody">
+        <!-- sản phẩm sẽ hiển thị ở đây -->
+      </tbody>
+    </table>
+
+    <div class="total">
+      <p><strong>Tổng cộng:</strong> <span id="cartTotal">0₫</span></p>
+      <button class="btn-clear" onclick="clearCart()">🗑️ Xóa giỏ hàng</button>
+      <button class="btn-pay" onclick="checkout()">💳 Thanh toán</button>
+    </div>
+  </section>
+
+  
+
+  <script>
+    // --- Hiển thị giỏ hàng từ localStorage ---
+    function loadCart() {
+      const cartBody = document.getElementById("cartBody");
+      const totalElement = document.getElementById("cartTotal");
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cartBody.innerHTML = "";
+
+      if (cart.length === 0) {
+        cartBody.innerHTML = "<tr><td colspan='6'>Giỏ hàng trống!</td></tr>";
+        totalElement.textContent = "0₫";
+        return;
+      }
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+
+        cartBody.innerHTML += `
+          <tr>
+            <td><img src="${item.image}" alt="${item.name}"></td>
+            <td>${item.name}</td>
+            <td>${item.size}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price.toLocaleString()}₫</td>
+            <td class="actions"><button onclick="removeItem(${index})">Xóa</button></td>
+          </tr>
+        `;
+      });
+
+      totalElement.textContent = total.toLocaleString() + "₫";
+    }
+
+    // --- Xóa 1 sản phẩm ---
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      loadCart();
+    }
+
+    // --- Xóa toàn bộ ---
+    function clearCart() {
+      if (confirm("Bạn có chắc muốn xóa toàn bộ giỏ hàng?")) {
+        localStorage.removeItem("cart");
+        loadCart();
+      }
+    }
+
+    // --- Thanh toán (giả lập) ---
+    function checkout() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) {
+        alert("Giỏ hàng đang trống!");
+        return;
+      }
+      alert("Cảm ơn bạn đã mua hàng tại 25May 💖 Đơn hàng của bạn đang được xử lý!");
+      localStorage.removeItem("cart");
+      loadCart();
+    }
+
+    loadCart();
+  </script>
+</body>
+</html>
+
+<hr>
+<footer>
+    © 2025 25May – Everyday basic, for everyone.
+  </footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
